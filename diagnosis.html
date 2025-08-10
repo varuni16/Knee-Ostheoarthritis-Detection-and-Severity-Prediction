@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}
+Diagnosis
+{% endblock %}
+{% block content %}
+<br>
+<h2 style="text-align: center; color: rgb(30, 30, 157); font-weight: bold">Diagnosis</h2>
+<p style="text-align: center; color:rgb(151, 154, 221); font-weight: bold">Please refer to the instructions given below and upload the X-ray images accordingly to get the result of the diagnosis.</p>
+<p style="text-align: center; color:rgb(151, 154, 221); font-weight: bold">Note: This system will give brief idea about the severity level of Knee Osteoarthritis but not the accurate grade of its severity. For better diagnosis we will recommend to consult to the doctor.</p>
+<div class="container">
+   <br>
+   <h3 style="text-align: justify; color: rgb(108, 50, 202); font-weight: bold">Instructions</h3>
+   <br>
+   <ul>
+      <li>
+         <p> Step 1: Take the radiographs of the Knee which has AnteroPosterior (AP) view and crop the knee portion and resize it to 299x299 pixles.</p>
+      </li>
+      <li>
+         <p> Step 2: Click on the 'Choose File' button given after the instruction and upload the cropped Knee Radiographs from your local machine.</p>
+      </li>
+      <li>
+         <p> Step 3: After uploading the radiographs, click on the 'Predict' button.</p>
+      </li>
+   </ul>
+   <br>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+   <div style="display: flex; align-items: center; flex-direction: column;">
+      <input type="file" id="image-input" name="file" accept=".jpg,.jpeg,.png" onchange="previewImage()">
+      <div style="margin-top: 20px;">
+         <img id="image-preview" src="#" alt="Preview" style="display: none; max-width: 300px; max-height: 300px; margin-right: 20px;">
+         <button id="predict-btn" type="submit" class="btn btn-primary" style="display: none;">Predict!</button>
+      </div>
+   </div>
+</form>
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+   {% if prediction_text %}
+   <div style="width: fit-content">
+      <div style="display: flex; flex-direction: column; align-items: center;">
+         <span style="font-weight: 600; font-size: larger;">Prediction: {{prediction_text}}</span>
+         <!-- {% if image_path %}<img style="width: 1000x; padding: 10px;" src="{{image_path}}" alt="Prediction Image">{% endif %} -->
+      </div>
+      {% endif %}
+   </div>
+</div>
+
+
+<br>
+<script src="{{ url_for('static', filename='js/main.js') }}" type="text/javascript"></script>
+<script>
+   function previewImage() {
+       var reader = new FileReader();
+       reader.onload = function(event) {
+           var img = document.getElementById("image-preview");
+           var btn = document.getElementById("predict-btn");
+           img.src = event.target.result;
+           img.style.display = "inline-block";
+           btn.style.display = "inline-block";
+       };
+       reader.readAsDataURL(event.target.files[0]);
+   }
+</script>
+{% endblock %}
